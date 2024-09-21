@@ -4,143 +4,147 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { StatusBar } from 'react-native';
 
 export default function App() {
-  const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [search, setSearch] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [tasks, settasks] = useState([]);
+  const [search,setsearch]=useState('')
+  const [title, settitle] = useState('');
+  const [date, setdate] = useState(new Date());
+  const [showdatepicker, setshowdatepicker] = useState(false);
+  const [showtimepicker, setshowtimepicker] = useState(false);
+  const [modalvisible, setmodalvisible] = useState(false);
 
-  // Handle Search Tasks
-  const handleSearch = (text) => {
-    setSearch(text);
+  
+  const handlesearch = (text) => {
+    
+    setsearch(text)
   };
 
-  // Add Task Function
-  const handleAddTask = () => {
+ 
+  const Handleaddtask = () => {
     if (!title) {
       Alert.alert('Error', 'Please enter a title');
       return;
     }
 
-    setTasks([...tasks, { id: Date.now(), title, date: date.toLocaleString() }]);
-    setTitle('');
-    setDate(new Date());
-    setModalVisible(false); // Close modal after adding task
+    settasks([...tasks, { id: Date.now(), title, date: date.toLocaleString() }]);
+    settitle('');
+    setdate(new Date());
+    setmodalvisible(false); 
   };
 
-  // DatePicker Handler
-  const showDatePickerHandler = () => {
-    setShowDatePicker(true);
+  
+  const Datepickerhandler = () => {
+    setshowdatepicker(true);
   };
 
-  const showTimePickerHandler = () => {
-    setShowTimePicker(true);
+  const Timepickerhandler = () => {
+    setshowtimepicker(true);
   };
 
-  const handleDateChange = (event, selectedDate) => {
+  const Handledatechange = (event, selectedDate) => {
     if (selectedDate) {
-      setDate(selectedDate);
+      setdate(selectedDate);
     }
-    setShowDatePicker(false);
+    setshowdatepicker(false);
   };
 
-  const handleTimeChange = (event, selectedTime) => {
+  const Handletimechange = (event, selectedTime) => {
     if (selectedTime) {
       const currentDate = new Date(date);
       currentDate.setHours(selectedTime.getHours(), selectedTime.getMinutes());
-      setDate(currentDate);
+      setdate(currentDate);
     }
-    setShowTimePicker(false);
+    setshowtimepicker(false);
   };
 
-  // Filtered Tasks Based on Search Input
+
   const filteredTasks = tasks.filter((task) =>
-    task.title.toLowerCase().includes(search.toLowerCase())
-  );
+    task.title.toLowerCase().includes(search.toLowerCase()));
+
 
   return (
     <View style={styles.container}>
-      {/* Search Bar */}
-      <StatusBar backgroundColor="green"/>
-      <Text style={{fontSize:30,fontWeight:'bold',textAlign:'center'}}>Your Taks</Text>
+      
+      <StatusBar backgroundcolor="green" />
+      <Text style={styles.title1}>Your Taks</Text>
       <TextInput
         placeholder="Search Tasks"
         value={search}
-        onChangeText={handleSearch}
-        style={styles.searchInput}
+        onChangeText={handlesearch}
+        style={styles.searchinput}
       />
 
-      {/* Task List */}
+    
       <FlatList
         data={filteredTasks}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={styles.taskContainer}>
-            <Text style={styles.taskTitle}>{item.title}</Text>
-            <Text style={styles.taskDate}>{item.date}</Text>
+          <View style={styles.taskcontainer}>
+            <Text style={styles.tasktitle}>{item.title}</Text>
+            <Text style={styles.taskdate}>{item.date}</Text>
           </View>
         )}
       />
 
-      {/* Floating Button to Add Task */}
+      
       <TouchableOpacity
-        style={styles.floatingButton}
-        onPress={() => setModalVisible(true)}
+        style={styles.floatingbutton}
+        onPress={() => setmodalvisible(true)}
       >
-        <Text style={styles.floatingButtonText}>+</Text>
+        <Text style={styles.floatingbuttontext}>+</Text>
       </TouchableOpacity>
 
-      {/* Modal for Adding Task */}
+    
       <Modal
-        visible={modalVisible}
+        visible={modalvisible}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
+      
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add Task</Text>
+        <View style={styles.modalcontainer}>
+          <View style={styles.modalcontent}>
+            <Text style={styles.modaltitle}>Add Task</Text>
            
             <TextInput
               placeholder="Enter Task Title"
               value={title}
-              onChangeText={setTitle}
+              onChangeText={settitle}
               style={styles.input}
             />
 
-            <TouchableOpacity onPress={showDatePickerHandler}>
-              <Text style={styles.datePickerText}>
+            <TouchableOpacity onPress={Datepickerhandler}>
+              <Text style={styles.datepickertext}>
                 Select Date: {date.toDateString()}
               </Text>
             </TouchableOpacity>
 
-            {showDatePicker && (
+            {showdatepicker && (
               <DateTimePicker
                 value={date}
                 mode="date"
-                display="default"
-                onChange={handleDateChange}
+                onChange={Handledatechange}
               />
             )}
 
-            <TouchableOpacity onPress={showTimePickerHandler}>
-              <Text style={styles.datePickerText}>
-                Select Time: {date.toLocaleTimeString()}
+            <TouchableOpacity onPress={Timepickerhandler}>
+              <Text style={styles.datepickertext}>
+                Select Time: {date.toTimeString()}
               </Text>
             </TouchableOpacity>
 
-            {showTimePicker && (
+            {showtimepicker && (
               <DateTimePicker
                 value={date}
                 mode="time"
-                display="default"
-                onChange={handleTimeChange}
+                
+                onChange={Handletimechange}
               />
             )}
 
-            <Button title="Add Task" style={styles.modalbutton} onPress={handleAddTask} />
+            <Button title="Add Task" style={styles.modalbutton} onPress={Handleaddtask} />
+
+            <TouchableOpacity onPress={() => setmodalvisible(false)} style={styles.closebutton}>
+              <Text style={styles.closebuttontext}>Close</Text>
+            </TouchableOpacity>
             
             
           </View>
@@ -154,13 +158,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#f7f4f0',
+  },
+  title1:
+  {
+    fontSize:30,
+    fontWeight:'bold',
+    textAlign:'center'
   },
   modalbutton:{
     marginBottom:20,
-    backgroundColor:"red"
+    backgroundColor:"blue"
   },
-  searchInput: {
+  searchinput: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
@@ -168,21 +178,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
   },
-  taskContainer: {
-    flexDirection: 'row',
+  taskcontainer: {
     justifyContent: 'space-between',
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom:20,
+    borderRadius:5,
+
   },
-  taskTitle: {
+  tasktitle: {
     fontSize: 16,
   },
-  taskDate: {
+  taskdate: {
     fontSize: 14,
     color: 'gray',
   },
-  floatingButton: {
+  floatingbutton: {
     position: 'absolute',
     right: 20,
     bottom: 20,
@@ -193,23 +205,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  floatingButtonText: {
+  floatingbuttontext: {
     color: '#fff',
     fontSize: 24,
   },
-  modalContainer: {
+  modalcontainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  modalContent: {
+  modalcontent: {
     width: 300,
     padding: 20,
     backgroundColor: 'white',
     borderRadius: 10,
   },
-  modalTitle: {
+  modaltitle: {
     fontSize: 20,
     marginBottom: 20,
   },
@@ -221,8 +233,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
   },
-  datePickerText: {
+  datepickertext: {
     marginBottom: 10,
     color: '#1E90FF',
+    
+  },
+
+  closebutton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#ff6666',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closebuttontext: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
